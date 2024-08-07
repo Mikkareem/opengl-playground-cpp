@@ -14,11 +14,31 @@ glm::mat4 Camera::getCameraMatrix() const {
 }
 
 void Camera::MoveLeft() {
-    location->moveZ(1.0f);
+    location->moveX(-1.0f);
     ChangeViewMatrix();
 }
 
 void Camera::MoveRight() {
+    location->moveX(1.0f);
+    ChangeViewMatrix();
+}
+
+void Camera::MoveUp() {
+    location->moveY(1.0f);
+    ChangeViewMatrix();
+}
+
+void Camera::MoveDown() {
+    location->moveY(-1.0f);
+    ChangeViewMatrix();
+}
+
+void Camera::ZoomIn() {
+    location->moveZ(1.0f);
+    ChangeViewMatrix();
+}
+
+void Camera::ZoomOut() {
     location->moveZ(-1.0f);
     ChangeViewMatrix();
 }

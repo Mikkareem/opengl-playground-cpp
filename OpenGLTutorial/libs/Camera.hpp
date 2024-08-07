@@ -29,6 +29,8 @@ public:
     void MoveLeft();
     void MoveUp();
     void MoveDown();
+    void ZoomIn();
+    void ZoomOut();
     
     glm::mat4 getCameraMatrix() const;
 private:

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Renderer.hpp"
+#include "Core.hpp"
 
 void GLClearError() {
     while(glGetError() != GL_NO_ERROR);
@@ -25,12 +26,15 @@ void Renderer::RenderCommand::DrawTriangles(const VertexArray* va, const IndexBu
     va->Bind();
     ib->Bind();
     shader->Bind();
-//    GLint vaId, vbId, ibId;
-//    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &vbId);
-//    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vaId);
-//    glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &ibId);
-//    
-//    std::cout << vaId << " " << vbId << " " << ibId << std::endl;
+//    DebugBindings();
     
     GLCall(glDrawElements(GL_TRIANGLES, ib->GetCount(), GL_UNSIGNED_SHORT, nullptr));
+}
+
+void Renderer::RenderCommand::DrawLines(const VertexArray* va, const IndexBuffer* ib, const Shader* shader) {
+    va->Bind();
+    ib->Bind();
+    shader->Bind();
+//    DebugBindings();
+    GLCall(glDrawElements(GL_LINES, ib->GetCount(), GL_UNSIGNED_SHORT, nullptr));
 }

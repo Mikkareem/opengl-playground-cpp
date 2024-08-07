@@ -1,7 +1,7 @@
 #include "Triangle.hpp"
 #include "Renderer.hpp"
 
-Triangle::Triangle(PVector* position, Color* color): m_Position(position), m_Color(color) {
+Triangle::Triangle(PVector* position, Color* color): m_Position(position), m_Color(color), m_ModelMatrix(glm::mat4(1.0f)) {
     coordinates = {
         -0.5f, -0.5f, 0.0f,
         0.0f, 0.5f, 0.0f,
@@ -11,11 +11,10 @@ Triangle::Triangle(PVector* position, Color* color): m_Position(position), m_Col
         0,1,2
     };
     InitLayout();
+    UpdatePosition(m_Position);
 }
 
 void Triangle::Draw(Camera* camera) {
-    glm::vec3 _Position = glm::vec3(m_Position->x, m_Position->y, m_Position->z);
-    m_ModelMatrix = glm::translate(glm::mat4(1.0f), _Position);
 
     shader->Bind();
     shader->SetUniformMat4f("u_Camera", camera->getCameraMatrix());
@@ -37,6 +36,8 @@ void Triangle::InitLayout() {
 
 void Triangle::UpdatePosition(PVector* newPosition) {
     m_Position = newPosition;
+    glm::vec3 _Position = glm::vec3(m_Position->x, m_Position->y, m_Position->z);
+    m_ModelMatrix = glm::translate(m_ModelMatrix, _Position);
 }
 
 void Triangle::UpdateColor(Color* color) {

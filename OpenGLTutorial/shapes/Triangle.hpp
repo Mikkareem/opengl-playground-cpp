@@ -33,6 +33,10 @@ public:
         return m_Position;
     }
     
+    inline void SetModalMatrix(const glm::mat4& matrix) {
+        m_ModelMatrix = m_ModelMatrix * matrix;
+    }
+    
 private:
     inline float* getCoordinates() const {
         return (float*)coordinates.data();

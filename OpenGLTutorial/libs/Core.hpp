@@ -8,6 +8,9 @@
 #ifndef Core_h
 #define Core_h
 
+#include <iostream>
+//#include <GL/glew.h>
+
 struct PVector {
     float x;
     float y;
@@ -44,6 +47,15 @@ struct Color {
     float b;
     float a = 0.1f;
 };
+
+//void DebugBindings() {
+//    GLint vaId, vbId, ibId;
+//    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &vbId);
+//    glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vaId);
+//    glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &ibId);
+//
+//    std::cout << vaId << " " << vbId << " " << ibId << std::endl;
+//}
 
 
 #endif /* Core_h */

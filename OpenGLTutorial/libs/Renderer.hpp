@@ -27,6 +27,7 @@ public:
     public:
         static void Clear();
         static void DrawTriangles(const VertexArray* va, const IndexBuffer* ib, const Shader* shader);
+        static void DrawLines(const VertexArray* va, const IndexBuffer* ib, const Shader* shader);
     };
 };
 

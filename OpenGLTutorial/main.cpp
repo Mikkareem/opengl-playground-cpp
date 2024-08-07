@@ -34,39 +34,46 @@ int main(int argc, const char * argv[]) {
     
     camera = new Camera();
     
-//    triangle1 = new Triangle(new PVector { 0.0f, 0.0f, -4.0f }, new Color { 1.0f, 0.0f, 0.0f, 1.0f });
-//    triangle2 = new Triangle(new PVector { 0.0f, 0.0f, -3.0f }, new Color { 0.0f, 1.0f, 0.0f, 1.0f });
-//    
-    for(int i = 0; i < triangles.size(); i++) {
-        triangles[i] = new Triangle(
-                                    new PVector {
-                                        randomf(0.0f, 1.0f),
-                                        randomf(0.0f, 1.0f),
-                                        randomf(0.0f, 1.0f)
-                                    },
-                                    new Color {
-                                        1.0f,
-                                        randomf(0.0f, 1.0f),
-                                        randomf(0.0f, 1.0f),
-                                        1.0f
-                                    }
-                                );
-    }
-
+    Triangle* triangle1 = new Triangle(new PVector { 0.0f, 0.0f, -3.0f }, new Color { 1.0f, 0.0f, 0.0f, 1.0f } );
+    Triangle* triangle2 = new Triangle(new PVector { 0.0f, 0.0f, 3.0f }, new Color { 0.0f, 0.0f, 1.0f, 1.0f } );
+    
+    float coordinates[] = {
+        0.0f, -1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f
+    };
+    
+    unsigned short indices[] = {0,1};
+    
+    VertexArray va;
+    VertexBuffer vb(coordinates, 6 * sizeof(float));
+    
+    VertexBufferLayout layout;
+    layout.Push<float>(3);
+    va.AddBuffer(vb, layout);
+    
+    IndexBuffer ib(indices, 2);
+    
+    Shader* shader = ShadersHolder::GetBasicShader();
+    
+    glm::vec3 pivot(0.0f, 0.0f, 0.0f); // Example pivot point
+    float angle = 1.0f;
+    
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         Renderer::RenderCommand::Clear();
         
-        for(int i = 0; i < triangles.size(); i++) {
-            triangles[i]->getPosition()->moveZ(zGo);
-        }
+        shader->Bind();
+        shader->SetUniformMat4f("u_Camera", camera->getCameraMatrix());
+        shader->SetUniformMat4f("u_Model", glm::mat4(1.0f));
+        shader->SetUniform4f("u_Color", 1.0f, 0.34f, 0.65f, 1.0f);
         
-        for (Triangle* triangle: triangles) {
-            triangle->Draw(camera);
-        }
+        Renderer::RenderCommand::DrawLines(&va, &ib, shader);
         
+        triangle1->Draw(camera);
+        triangle2->Draw(camera);
+
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
         
@@ -74,6 +81,7 @@ int main(int argc, const char * argv[]) {
 
         /* Poll for and process events */
         glfwPollEvents();
+        
     }
 
     glfwTerminate();
@@ -86,11 +94,16 @@ static int times = 0;
 void key_Callback(GLFWwindow* window, int key, int scanCode, int action, int mods) {
     if(action == GLFW_PRESS || action == GLFW_REPEAT) {
         switch(key) {
-            case GLFW_KEY_UP:
-                std::cout << "Up is pressed " << times++ << " times" << std::endl;
-                break;
             case GLFW_KEY_SPACE:
                 std::cout << "Space is pressed " << times++ << " times" << std::endl;
+                break;
+            case GLFW_KEY_UP:
+                std::cout << "Up is pressed " << times++ << " times" << std::endl;
+                camera->MoveUp();
+                break;
+            case GLFW_KEY_DOWN:
+                std::cout << "Down is pressed " << times++ << " times" << std::endl;
+                camera->MoveDown();
                 break;
             case GLFW_KEY_LEFT:
                 std::cout << "Left is pressed " << times++ << " times" << std::endl;
@@ -99,6 +112,14 @@ void key_Callback(GLFWwindow* window, int key, int scanCode, int action, int mod
             case GLFW_KEY_RIGHT:
                 std::cout << "Right is pressed " << times++ << " times" << std::endl;
                 camera->MoveRight();
+                break;
+            case GLFW_KEY_Z:
+                std::cout << "Z is pressed " << times++ << " times" << std::endl;
+                camera->ZoomIn();
+                break;
+            case GLFW_KEY_X:
+                std::cout << "X is pressed " << times++ << " times" << std::endl;
+                camera->ZoomOut();
                 break;
         }
     }
